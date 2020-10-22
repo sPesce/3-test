@@ -2,17 +2,18 @@ package com.steve.springbootstarter.dao;
 
 import com.steve.springbootstarter.model.User;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface UserDao {
 
-  List<User> getAllUsers();
+  List<User> selectAllUsers();
 
-  User getUser(UUID userUid);
+  Optional<User> selectUserByUserUid(UUID userUid);
 
   int updateUser(User user);
 
-  int removeUser(UUID userUid);
+  int deleteUserByUserUid(UUID userUid);
 
-  int insertUser(User user);
+  int insertUser(UUID userUid, User user);
 }

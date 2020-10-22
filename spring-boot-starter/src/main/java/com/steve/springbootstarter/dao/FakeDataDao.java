@@ -1,12 +1,18 @@
 package com.steve.springbootstarter.dao;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import com.steve.springbootstarter.model.User;
+import com.steve.springbootstarter.model.User.Gender;
 
+import org.springframework.stereotype.Repository;
+
+@Repository
 public class FakeDataDao implements UserDao {
 
   private static Map<UUID, User> database;
@@ -16,42 +22,40 @@ public class FakeDataDao implements UserDao {
     UUID userUid = UUID.randomUUID();
     database.put( userUid , new User(
         userUid,
-        firstName: "Joe",
-        lastName: "Jones",
+        "Joe",
+        "Jones",
         Gender.MALE,
-        age: 22,
-        email: "joe@joe.com"
+        22,
+        "Joe.jones@gmail.com"    
         ));
   }
 
   @Override
-  public List<User> getAllUsers() {
-    // TODO Auto-generated method stub
-    return null;
+  public List<User> selectAllUsers() {
+    return new ArrayList<>(database.values());
   }
 
   @Override
-  public User getUser(UUID userUid) {
-    // TODO Auto-generated method stub
-    return null;
+  public Optional<User> selectUserByUserUid(UUID userUid) {
+    return Optional.ofNullable(database.get(userUid));
   }
 
   @Override
   public int updateUser(User user) {
-    // TODO Auto-generated method stub
-    return 0;
+    database.put(user.getUserUid() ,user);
+    return  1;
   }
 
   @Override
-  public int removeUser(UUID userUid) {
-    // TODO Auto-generated method stub
-    return 0;
+  public int deleteUserByUserUid(UUID userUid) {
+    database.remove(userUid);
+    return 1;
   }
 
   @Override
-  public int insertUser(User user) {
-    // TODO Auto-generated method stub
-    return 0;
+  public int insertUser(UUID userUid, User user) {
+    database.put(userUid, user);
+    return 1;
   }
   
 }
