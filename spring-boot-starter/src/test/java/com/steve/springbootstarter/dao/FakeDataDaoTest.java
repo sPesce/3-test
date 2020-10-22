@@ -78,7 +78,17 @@ public class FakeDataDaoTest {
   }
   
   @Test
-  public void insertUser() throws Exception {
+  public void shouldInsertUser() throws Exception {
+    UUID userUid = UUID.randomUUID();
+    User newJoe = new User(userUid, "Anna", "Montana", Gender.FEMALE, 30, "anna@gmail.com");
+    
+    fakeDataDao.insertUser(userUid, newJoe);
+   
+    List<User> users = fakeDataDao.selectAllUsers();
+    
+    assertThat(users).hasSize(2);
+    assertThat(fakeDataDao.selectUserByUserUid(userUid).get())
+    .isEqualToComparingFieldByField(newJoe);
   }
   
 }
