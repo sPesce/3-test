@@ -1,8 +1,11 @@
 package com.steve.springbootstarter.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import com.google.common.collect.ImmutableList;
@@ -36,12 +39,23 @@ public class UserServiceTest {
     UUID annaUserUid = UUID.randomUUID();
     User anna = new User(annaUserUid , "Anna", "Montana", Gender.FEMALE, 30, "anna@gmail.com");
 
-    ImmutableList
-    
-    given(fakeDataDao.selectAllUsers()).willReturn();
+    ArrayList<User> ls = new ArrayList<>();
+    ls.add(anna);
+
+    ImmutableList<User> users = ImmutableList.copyOf(ls);
+
+    given(fakeDataDao.selectAllUsers()).willReturn(users);
 		List<User> actualValue = userService.getAllUsers();
 
     assertThat(actualValue).hasSize(1);
+    User testUsr = actualValue.get(0);
+
+    assertThat(testUsr.getAge()).isEqualTo(30);
+    assertThat(testUsr.getFirstName()).isEqualTo("Anna");
+    assertThat(testUsr.getLastName()).isEqualTo("Montana");
+    assertThat(testUsr.getGender()).isEqualTo(Gender.FEMALE);
+    assertThat(testUsr.getEmail()).isEqualTo("anna@gmail.com");
+    assertThat(testUsr.getUserUid()).isNotNull();
 	}
 
 	@Test
