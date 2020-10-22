@@ -7,7 +7,6 @@ import java.util.UUID;
 
 import com.steve.springbootstarter.dao.UserDao;
 import com.steve.springbootstarter.model.User;
-
 import org.jvnet.hk2.annotations.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
