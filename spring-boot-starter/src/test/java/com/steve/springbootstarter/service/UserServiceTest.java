@@ -50,7 +50,7 @@ public class UserServiceTest {
     ImmutableList<User> users = ImmutableList.copyOf(ls);
 
     given(fakeDataDao.selectAllUsers()).willReturn(users);
-		List<User> actualValue = userService.getAllUsers();
+		List<User> actualValue = userService.getAllUsers(Optional.empty());
 
     assertThat(actualValue).hasSize(1);
     User testUsr = actualValue.get(0);
