@@ -5,7 +5,7 @@ import java.util.UUID;
 public class User {
 
   //user id
-  private final UUID userUid;
+  private UUID userUid;
   private final String firstName;
   private final String lastName;
   private final Gender gender;
@@ -21,29 +21,21 @@ public class User {
     this.email = email;
   }
 
-  public UUID getUserUid() {
-    return this.userUid;
+  public UUID getUserUid() { return this.userUid;}
+
+  public void setUserUid(UUID userUid) {
+    this.userUid = userUid;
   }
 
-  public String getFirstName() {
-    return this.firstName;
-  }
+  public String getFirstName() { return this.firstName;}
 
-  public String getLastName() {
-    return this.lastName;
-  }
+  public String getLastName() { return this.lastName;}
 
-  public Gender getGender() {
-    return this.gender;
-  }
+  public Gender getGender() { return this.gender;}
 
-  public Integer getAge() {
-    return this.age;
-  }
+  public Integer getAge() { return this.age;}
 
-  public String getEmail() {
-    return this.email;
-  }
+  public String getEmail() { return this.email;}
 
   @Override
   public String toString() {

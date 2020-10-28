@@ -1,7 +1,10 @@
 package com.steve.springbootstarter.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,8 +18,10 @@ import com.steve.springbootstarter.model.User.Gender;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.web.servlet.handler.UserRoleAuthorizationInterceptor;
 
 
 public class UserServiceTest {
@@ -50,52 +55,88 @@ public class UserServiceTest {
     assertThat(actualValue).hasSize(1);
     User testUsr = actualValue.get(0);
 
+    assertUserFields(testUsr);
+	}
+
+	@Test
+	public void shouldGetUser() {
+    UUID annaUUID = UUID.randomUUID();
+    User anna = new User(annaUUID , "Anna", "Montana", Gender.FEMALE, 30, "anna@gmail.com");
+
+    given(fakeDataDao.selectUserByUserUid(annaUUID)).willReturn(Optional.of(anna));
+    
+
+    Optional<User> actualValue = userService.getUser(annaUUID);
+    
+    assertThat(actualValue.isPresent()).isTrue();
+    User testUsr = actualValue.get();
+
+    assertUserFields(testUsr);
+
+	}
+
+ 
+
+	@Test
+	public void shouldUpdateUser() {
+    UUID annaUUID = UUID.randomUUID();
+    User anna = new User(annaUUID , "Anna", "Montana", Gender.FEMALE, 30, "anna@gmail.com");
+
+    given(fakeDataDao.selectUserByUserUid(annaUUID)).willReturn(Optional.of(anna));
+    given(fakeDataDao.updateUser(anna)).willReturn(1);
+
+    ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
+
+    int updateResult = userService.updateUser(anna);
+
+    verify(fakeDataDao).selectUserByUserUid(annaUUID);
+    verify(fakeDataDao).updateUser(captor.capture());
+
+    User user = captor.getValue();
+    assertUserFields(user);
+
+    assertThat(updateResult).isEqualTo(1);
+
+	}
+
+	@Test
+	public void shouldRemoveUser() {
+    UUID annaUUID = UUID.randomUUID();
+    User anna = new User(annaUUID , "Anna", "Montana", Gender.FEMALE, 30, "anna@gmail.com");
+
+    given(fakeDataDao.selectUserByUserUid(annaUUID)).willReturn(Optional.of(anna));
+    given(fakeDataDao.deleteUserByUserUid(annaUUID)).willReturn(1);
+
+
+    int deleteResult = userService.removeUser(annaUUID);
+
+    verify(fakeDataDao).selectUserByUserUid(annaUUID);
+    verify(fakeDataDao).deleteUserByUserUid(annaUUID);
+
+    assertThat(deleteResult).isEqualTo(1);
+  }
+
+	@Test
+	public void shouldInsertUser() {
+    User anna = new User(null , "Anna", "Montana", Gender.FEMALE, 30, "anna@gmail.com");
+
+    given(fakeDataDao.insertUser(any(UUID.class),eq(anna))).willReturn(1);
+
+    ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
+    int insertResult = userService.insertUser(anna);
+    verify(fakeDataDao).insertUser(any(UUID.class), captor.capture());
+    User user = captor.getValue();
+    assertUserFields(user);
+
+    assertThat(insertResult).isEqualTo(1);
+  }
+  
+  private void assertUserFields(User testUsr) {
     assertThat(testUsr.getAge()).isEqualTo(30);
     assertThat(testUsr.getFirstName()).isEqualTo("Anna");
     assertThat(testUsr.getLastName()).isEqualTo("Montana");
     assertThat(testUsr.getGender()).isEqualTo(Gender.FEMALE);
     assertThat(testUsr.getEmail()).isEqualTo("anna@gmail.com");
     assertThat(testUsr.getUserUid()).isNotNull();
-	}
-
-	@Test
-	public void shouldGetUser() {
-		// TODO: initialize args
-		UUID userUid;
-
-		Optional<User> actualValue = userService.getUser(userUid);
-
-		// TODO: assert scenario
-	}
-
-	@Test
-	public void shouldUpdateUser() {
-		// TODO: initialize args
-		User user;
-
-		int actualValue = userService.updateUser(user);
-
-		// TODO: assert scenario
-	}
-
-	@Test
-	public void shouldRemoveUser() {
-		// TODO: initialize args
-		UUID userUid;
-
-		int actualValue = userService.removeUser(userUid);
-
-		// TODO: assert scenario
-	}
-
-	@Test
-	public void shouldInsertUser() {
-		// TODO: initialize args
-		UUID userUid;
-		User user;
-
-		int actualValue = userService.insertUser(userUid, user);
-
-		// TODO: assert scenario
-	}
+  }
 }
