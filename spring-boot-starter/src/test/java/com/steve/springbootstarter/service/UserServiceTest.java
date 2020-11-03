@@ -1,6 +1,8 @@
 package com.steve.springbootstarter.service;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.assertThat;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -51,31 +53,58 @@ public class UserServiceTest {
 
     given(fakeDataDao.selectAllUsers()).willReturn(users);
 		List<User> actualValue = userService.getAllUsers(Optional.empty());
-
+    
     assertThat(actualValue).hasSize(1);
     User testUsr = actualValue.get(0);
-
-    assertUserFields(testUsr);
+    
+    assertAnnaFields(testUsr);
 	}
 
 	@Test
 	public void shouldGetUser() {
     UUID annaUUID = UUID.randomUUID();
     User anna = new User(annaUUID , "Anna", "Montana", Gender.FEMALE, 30, "anna@gmail.com");
-
+    
     given(fakeDataDao.selectUserByUserUid(annaUUID)).willReturn(Optional.of(anna));
     
-
+    
     Optional<User> actualValue = userService.getUser(annaUUID);
     
     assertThat(actualValue.isPresent()).isTrue();
     User testUsr = actualValue.get();
-
-    assertUserFields(testUsr);
-
+    
+    assertAnnaFields(testUsr);
+    
 	}
+  
+  @Test
+  public void shouldGetAllUsersByGender() throws Exception {
+    UUID annaUserUid = UUID.randomUUID();
+    User anna = new User(annaUserUid , "Anna", "Montana", Gender.FEMALE, 30, "anna@gmail.com");
+  UUID joeUUID = UUID.randomUUID();
+  User joe = new User(joeUUID , "Joe", "Jonesey", Gender.MALE, 32, "joe@gmail.com");
+  
+  ArrayList<User> ls = new ArrayList<>();
+  ls.add(anna);
+  ls.add(joe);
+  
+  ImmutableList<User> users = ImmutableList.copyOf(ls);
+   
+  given(fakeDataDao.selectAllUsers()).willReturn(users);
 
- 
+  List<User> filteredUsers = userService.getAllUsers(Optional.of("female"));
+  assertThat(filteredUsers).hasSize(1);
+
+  assertAnnaFields(filteredUsers.get(0));
+
+}
+
+  @Test
+  public void shouldThrowExceptionWhenGenderInvalid() throws Exception {
+    assertThatThrownBy(() -> userService.getAllUsers(Optional.of("sdsadas")))
+    .isInstanceOf(IllegalStateException.class)
+    .hasMessageContaining("Invalid Gender");
+  }
 
 	@Test
 	public void shouldUpdateUser() {
@@ -93,7 +122,7 @@ public class UserServiceTest {
     verify(fakeDataDao).updateUser(captor.capture());
 
     User user = captor.getValue();
-    assertUserFields(user);
+    assertAnnaFields(user);
 
     assertThat(updateResult).isEqualTo(1);
 
@@ -126,12 +155,12 @@ public class UserServiceTest {
     int insertResult = userService.insertUser(anna);
     verify(fakeDataDao).insertUser(any(UUID.class), captor.capture());
     User user = captor.getValue();
-    assertUserFields(user);
+    assertAnnaFields(user);
 
     assertThat(insertResult).isEqualTo(1);
   }
   
-  private void assertUserFields(User testUsr) {
+  private void assertAnnaFields(User testUsr) {
     assertThat(testUsr.getAge()).isEqualTo(30);
     assertThat(testUsr.getFirstName()).isEqualTo("Anna");
     assertThat(testUsr.getLastName()).isEqualTo("Montana");
