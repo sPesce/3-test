@@ -30,12 +30,13 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
+
     <dependency>
-      <groupId>org.jboss.resteasy</groupId>
-      <artifactId>resteasy-spring-boot-starter</artifactId>
-      <version>4.6.5.Final-SNAPSHOT</version>
-      <scope>runtime</scope>
+        <groupId>org.jboss.resteasy</groupId>
+        <artifactId>resteasy-spring-boot-starter</artifactId>
+        <version>4.6.4.Final</version>
     </dependency>
+
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
