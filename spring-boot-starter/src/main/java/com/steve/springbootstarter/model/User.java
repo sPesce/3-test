@@ -1,21 +1,31 @@
 package com.steve.springbootstarter.model;
 
+import java.time.LocalDate;
 import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class User {
 
   //user id
-  private UUID userUid;
+  private final UUID userUid;
   
-  private String firstName;
-  private String lastName;
-  private Gender gender;
-  private Integer age;
-  private String email;
+  private final String firstName;
+  private final String lastName;
+  private final Gender gender;
+  private final Integer age;
+  private final String email;
 
   
 
-  public User(UUID userUid, String firstName, String lastName, Gender gender, Integer age, String email) {
+  public User( 
+  @JsonProperty("userUid") UUID userUid,
+  @JsonProperty("firstName") String firstName,
+  @JsonProperty("lastName") String lastName,
+  @JsonProperty("gender") Gender gender,
+  @JsonProperty("age") Integer age,
+  @JsonProperty("email") String email) {
     this.userUid = userUid;
     this.firstName = firstName;
     this.lastName = lastName;
@@ -23,14 +33,20 @@ public class User {
     this.age = age;
     this.email = email;
   }
-  public User() {  
+
+  public static User newUser(UUID userUid, User user) {
+    return new User (
+      userUid,
+      user.getFirstName(),
+      user.getLastName(),
+      user.getGender(),
+      user.getAge(),
+      user.getEmail()
+      );
   }
 
-  public UUID getUserUid() { return this.userUid;}
-
-  public void setUserUid(UUID userUid) {
-    this.userUid = userUid;
-  }
+  @JsonProperty("id")
+  public UUID getUserUid() { return userUid;}
 
   public String getFirstName() { return this.firstName;}
 
@@ -41,6 +57,14 @@ public class User {
   public Integer getAge() { return this.age;}
 
   public String getEmail() { return this.email;}
+
+  public String getFullName() {
+    return firstName + " " + lastName;
+  }
+
+  public LocalDate getDateOfBirth() {
+    return LocalDate.now().minusYears(age);
+  }
 
   @Override
   public String toString() {

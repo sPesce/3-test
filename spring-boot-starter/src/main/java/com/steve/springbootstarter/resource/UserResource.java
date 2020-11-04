@@ -21,10 +21,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping(
-  path = "/api/v1/users"//  <<-----------------------------------
-)
+// @RestController
+// @RequestMapping(
+//   path = "/api/v1/users"//  <<-----------------------------------
+// )
 public class UserResource {
   
   private UserService userService;
@@ -35,7 +35,8 @@ public class UserResource {
   }
  
   @RequestMapping(                            
-    method = RequestMethod.GET
+    method = RequestMethod.GET,
+    produces = MediaType.APPLICATION_JSON_VALUE
   )//GET all users                          
   public List<User> fetchUsers(@QueryParam("gender") String gender) {
     return userService.getAllUsers(Optional.ofNullable(gender));    
@@ -44,6 +45,7 @@ public class UserResource {
  
   @RequestMapping(              
     method = RequestMethod.GET,
+    produces = MediaType.APPLICATION_JSON_VALUE,
     path = "{userUid}"        
   )//GET one user
   public ResponseEntity<?> fetchUser(@PathVariable("userUid") UUID userUid) {
@@ -61,7 +63,8 @@ public class UserResource {
  
   @RequestMapping(
     method = RequestMethod.POST,                
-    consumes = MediaType.APPLICATION_JSON_VALUE
+    consumes = MediaType.APPLICATION_JSON_VALUE,
+    produces = MediaType.APPLICATION_JSON_VALUE
   )//post one user (add a new user)                                         
   public ResponseEntity<Integer> insertNewUser(@RequestBody User user) {
     int result = userService.insertUser(user);
@@ -70,7 +73,8 @@ public class UserResource {
 
   @RequestMapping(
     method = RequestMethod.PUT,
-    consumes = MediaType.APPLICATION_JSON_VALUE
+    consumes = MediaType.APPLICATION_JSON_VALUE,
+    produces = MediaType.APPLICATION_JSON_VALUE
   )
   public ResponseEntity<Integer> updateUser(@RequestBody User user) {
     int result = userService.updateUser(user);
@@ -79,7 +83,8 @@ public class UserResource {
   
   @RequestMapping(
     method = RequestMethod.DELETE,
-    path = "{userUid}"
+    path = "{userUid}",
+    produces = MediaType.APPLICATION_JSON_VALUE
   )
   public ResponseEntity<Integer> deleteUser(@PathVariable("userUid") UUID userUid) {
     int result = userService.removeUser(userUid);
