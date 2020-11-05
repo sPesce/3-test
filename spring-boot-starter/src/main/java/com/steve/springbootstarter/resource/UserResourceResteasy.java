@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.ws.rs.GET;
-import javax.ws.rs.PATCH;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
@@ -24,7 +23,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.util.UUID;
 
-import org.springframework.web.bind.annotation.RequestBody;
+import static java.lang.System.out;
 
 
 @Component
@@ -42,6 +41,10 @@ public class UserResourceResteasy {
   @GET
   @Produces(APPLICATION_JSON)
   public List<User> fetchUsers(@QueryParam("gender") String gender) {
+    if( gender == null)
+      out.println("Getting all users");
+    else
+      out.println("Getting all " + gender.toLowerCase() + " users.");
     return userService.getAllUsers(Optional.ofNullable(gender));  
   }
 
@@ -49,7 +52,7 @@ public class UserResourceResteasy {
   @Produces(APPLICATION_JSON)
   @Path("{id}")
   public Response fetchUser(@PathParam("id") UUID id) {
-    System.out.println("User UID: " + id);
+    out.println("Fetching user with id: " + id);
     Optional<User> userOptional = userService.getUser(id);
     if( userOptional.isPresent())
       return Response.ok(userOptional.get()).build();
@@ -66,6 +69,7 @@ public class UserResourceResteasy {
   @Consumes(APPLICATION_JSON)
   @Produces(APPLICATION_JSON)
   public Response insertNewUser( User user) {
+    out.println("Inserting user with id");
     int result = userService.insertUser(user);
     return getIntResponseEntity(result);
   }

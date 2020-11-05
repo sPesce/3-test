@@ -16,6 +16,8 @@
 
 	<properties>
 		<java.version>11</java.version>
+    <rest.easy.client.version>3.1.4.Final</rest.easy.client.version>
+    <paypal.rest.easy.version>4.6.4.Final</paypal.rest.easy.version>
 	</properties>
 
 	<dependencies>
@@ -29,14 +31,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
-
-    <dependency>
-        <groupId>org.jboss.resteasy</groupId>
-        <artifactId>resteasy-spring-boot-starter</artifactId>
-        <version>4.6.4.Final</version>
-    </dependency>
-
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -55,6 +49,19 @@
      <artifactId>google-collections</artifactId>
      <version>1.0</version>
    </dependency>
+
+    <dependency>
+        <groupId>org.jboss.resteasy</groupId>
+        <artifactId>resteasy-spring-boot-starter</artifactId>
+        <version>${paypal.rest.easy.version}</version>
+    </dependency>
+
+  <!-- https://mvnrepository.com/artifact/org.jboss.resteasy/resteasy-client -->
+  <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-client</artifactId>
+      <version>${rest.easy.client.version}</version>
+  </dependency>
 
  </dependencies>
 
